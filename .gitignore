@@ -1,0 +1,59 @@
+# Environments & Python Bytecode
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# SQLite Database & Runtime Instance
+database.db
+*.sqlite3
+*.db
+instance/*
+!instance/.gitkeep
+
+# User Uploads, Heatmaps & Generated Output Assets
+static/uploads/*
+!static/uploads/.gitkeep
+static/heatmaps/*
+!static/heatmaps/.gitkeep
+static/plots/*.png
+static/plots/*.jpg
+static/plots/*.jpeg
+static/plots/__pycache__/
+!static/plots/.gitkeep
+*.log
+
+# Datasets & Compressed Archives
+dataset/
+datasets/
+data/
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Machine Learning Models & Serialized Artifacts
+*.pkl
+*.joblib
+*.keras
+*.h5
+*.pt
+*.pth
+model/*
+!model/.gitkeep
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

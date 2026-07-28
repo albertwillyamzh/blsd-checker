@@ -1,0 +1,128 @@
+.history-container {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 1300px;
+    margin: 120px auto 40px auto;
+    color: white;
+}
+
+/* judul */
+.history-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* form normal */
+.history-container form {
+    position: relative;
+}
+
+/* grid scroll area */
+.history-grid {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 10px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+/* card */
+.history-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    color: #333;
+    position: relative;
+    transition: 0.2s;
+}
+
+.history-card:hover {
+    transform: translateY(-4px);
+}
+
+.history-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.history-info {
+    padding: 12px 14px;
+}
+
+.history-time {
+    font-size: 12px;
+    color: #777;
+}
+
+.history-result strong {
+    color: #2f7d32;
+}
+
+.select-box {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transform: scale(1.2);
+}
+
+.delete-bar {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn.danger {
+    background: #c0392b;
+    color: white;
+    padding: 12px 32px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.danger:hover {
+    background: #a93226;
+}
+
+/* scrollbar */
+.history-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-grid::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+}
+
+.history-card {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    animation: historyIn 0.6s ease forwards;
+}
+
+@keyframes historyIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.history-card:nth-child(1)  { animation-delay: 0.05s; }
+.history-card:nth-child(2)  { animation-delay: 0.10s; }
+.history-card:nth-child(3)  { animation-delay: 0.15s; }
+.history-card:nth-child(4)  { animation-delay: 0.20s; }
+.history-card:nth-child(5)  { animation-delay: 0.25s; }
+.history-card:nth-child(6)  { animation-delay: 0.30s; }
+.history-card:nth-child(7)  { animation-delay: 0.35s; }
+.history-card:nth-child(8)  { animation-delay: 0.40s; }
+.history-card:nth-child(9)  { animation-delay: 0.45s; }
+.history-card:nth-child(10) { animation-delay: 0.50s; }
+.history-card:nth-child(11) { animation-delay: 0.55s; }
+.history-card:nth-child(12) { animation-delay: 0.60s; }
+.history-card:nth-child(13) { animation-delay: 0.65s; }
+.history-card:nth-child(14) { animation-delay: 0.70s; }
+.history-card:nth-child(15) { animation-delay: 0.75s; }

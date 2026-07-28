@@ -1,0 +1,120 @@
+.classify-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    padding: 40px 45px;
+    border-radius: 22px;
+    text-align: center;
+    width: 420px;
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+    z-index: 2;
+    color: #fff;
+}
+
+.classify-card h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.classify-card label,
+.classify-card span,
+.classify-card strong {
+    color: #f1f1f1;
+}
+
+.classify-card input[type="file"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 20px; 
+
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+
+    border: 1px solid rgba(255,255,255,0.35);
+    outline: none;
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    cursor: pointer;
+}
+
+.classify-card input[type="file"]::file-selector-button {
+    background: rgba(255,255,255,0.35);
+    color: #1f2d14;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.classify-card input[type="file"]::file-selector-button:hover {
+    background: rgba(255,255,255,0.55);
+}
+
+.classify-card .btn,
+.classify-card button {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none;
+}
+
+.classify-card .btn.primary {
+    background: #9ad66f;
+    color: #1f2d14;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+.classify-card .btn.primary:hover {
+    background: #86c85a;
+    transform: translateY(-1px);
+}
+
+.result-box {
+    margin-top: 20px;
+    color: #1f3d1f;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.preview-img {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 12px;
+}
+
+.animate-classify {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    animation: classifyIn 0.9s ease-out forwards;
+}
+
+@keyframes classifyIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.classify-card > * {
+    opacity: 0;
+    animation: fadeChild 0.6s ease forwards;
+}
+
+.classify-card > *:nth-child(1) { animation-delay: 0.2s; }
+.classify-card > *:nth-child(2) { animation-delay: 0.4s; }
+.classify-card > *:nth-child(3) { animation-delay: 0.6s; }
+.classify-card > *:nth-child(4) { animation-delay: 0.8s; }
+
+@keyframes fadeChild {
+    to {
+        opacity: 1;
+    }
+}

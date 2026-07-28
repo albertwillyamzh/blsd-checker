@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classification - Banana Leaf Disease Classification</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+  
+  <style>
+    .classify-section {
+      padding: 3.5rem 0 5rem;
+    }
+
+    .classify-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    /* Drag & Drop Upload Zone */
+    .dropzone-box {
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      background: var(--bg-subtle);
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .dropzone-box:hover, .dropzone-box.dragover {
+      border-color: var(--leaf-green);
+      background: var(--cream-soft);
+    }
+
+    .dropzone-icon {
+      font-size: 2.8rem;
+      color: var(--leaf-green);
+      margin-bottom: 1rem;
+    }
+
+    .dropzone-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--forest-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .dropzone-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+
+    .file-input-real {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-preview-wrap {
+      margin-top: 1rem;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      max-height: 280px;
+      display: none;
+      justify-content: center;
+      background: #000000;
+    }
+
+    .file-preview-wrap img {
+      max-width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+    }
+
+    /* Prediction Result Card */
+    .result-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .result-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--forest-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .prediction-item {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .prediction-main {
+      border-left: 4px solid var(--leaf-green);
+    }
+
+    .pred-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .pred-label {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--forest-primary);
+    }
+
+    .pred-score-text {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .pred-score-text strong {
+      color: var(--leaf-green);
+      font-size: 1.05rem;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--forest-primary) 0%, var(--leaf-green) 100%);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .server-preview-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .server-preview-img {
+      max-width: 100%;
+      max-height: 320px;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .advisory-pill {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      color: #795548;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      margin-top: 1.5rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 992px) {
+      .classify-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="{{ url_for('home') }}" class="nav-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div class="brand-titles">
+          <span class="brand-name">BLSDChecker</span>
+          <span class="brand-tag">Banana Leaf Disease Classification</span>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <a href="{{ url_for('home') }}" class="nav-item-link">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="/classification" class="nav-item-link active">
+          <i class="fa-solid fa-microscope"></i> Classifier
+        </a>
+
+        <!-- Profile Dropdown Wrapper -->
+        <div class="profile-wrapper">
+          <input type="checkbox" id="profileToggle" hidden>
+          <label for="profileToggle" class="profile-trigger">
+            <span class="profile-avatar">{{ session.username[0]|upper }}</span>
+            <span>{{ session.username }}</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+          </label>
+
+          <div class="profile-popup">
+            <div class="profile-popup-header">
+              <div class="profile-name-text">{{ session.username }}</div>
+              <div class="profile-role-badge">{{ session.role }}</div>
+            </div>
+
+            {% if session.role == 'admin' %}
+            <a href="/documentation" class="popup-item">
+              <i class="fa-solid fa-chart-pie"></i> Documentation
+            </a>
+            {% endif %}
+
+            <a href="/history" class="popup-item">
+              <i class="fa-solid fa-clock-rotate-left"></i> History
+            </a>
+
+            <a href="/logout" class="popup-item logout">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Classification Workspace -->
+  <section class="classify-section">
+    <div class="container">
+      
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-forest" style="margin-bottom: 0.5rem;">RBFNN DIAGNOSTIC WORKSPACE</span>
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--forest-primary);">Banana Leaf Pathology Classifier</h1>
+        <p style="color: var(--text-muted);">Upload a banana leaf image to evaluate foliage health using the RBF Neural Network model.</p>
+      </div>
+
+      <div class="classify-grid">
+        
+        <!-- Left: Upload Form -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i class="fa-solid fa-cloud-arrow-up" style="color: var(--leaf-green);"></i>
+              <span>Upload Leaf Sample</span>
+            </h2>
+            <p class="card-subtitle">Select a PNG, JPG, or JPEG leaf image for classification</p>
+          </div>
+
+          <form action="/predict" method="POST" enctype="multipart/form-data">
+            
+            <div class="dropzone-box" id="dropzone">
+              <input type="file" name="file" required class="file-input-real" id="fileInput" accept="image/*" onchange="handleFileSelect(this)">
+              <div class="dropzone-icon">
+                <i class="fa-solid fa-file-image"></i>
+              </div>
+              <div class="dropzone-title">Click or Drag Image Here</div>
+              <div class="dropzone-desc">Supports PNG, JPG, JPEG, GIF, BMP (Max 16MB)</div>
+              <button type="button" class="btn btn-secondary" style="pointer-events: none;">Browse File</button>
+            </div>
+
+            <!-- Client-side Selected File Preview -->
+            <div class="file-preview-wrap" id="clientPreviewWrap">
+              <img id="clientPreviewImg" src="#" alt="Selected Leaf Image Preview">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.5rem;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Run RBFNN Classification</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Results & Server Image Preview -->
+        <div>
+          {% if image_file %}
+          <div class="server-preview-card">
+            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--forest-primary); margin-bottom: 0.8rem;">
+              <i class="fa-solid fa-image"></i> Analyzed Image Preview
+            </h3>
+            <img src="{{ url_for('static', filename='uploads/' + image_file) }}" class="server-preview-img" alt="Uploaded Banana Leaf Sample">
+          </div>
+          {% endif %}
+
+          {% if prediction %}
+          <div class="result-card">
+            <div class="result-header">
+              <div class="result-title">
+                <i class="fa-solid fa-square-poll-vertical" style="color: var(--leaf-green);"></i>
+                <span>Classification Result</span>
+              </div>
+              <span class="badge badge-lime">RBFNN Output</span>
+            </div>
+
+            <div class="prediction-list">
+              {% for p in prediction %}
+              <div class="prediction-item {% if loop.first %}prediction-main{% endif %}">
+                <div class="pred-top-row">
+                  <span class="pred-label">{{ p.label }}</span>
+                  <span class="pred-score-text">
+                    Relative prediction score: <strong>{{ p.prob }}%</strong>
+                  </span>
+                </div>
+
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: {{ p.prob }}%;"></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="advisory-pill">
+              <i class="fa-solid fa-circle-info" style="font-size: 1rem; margin-top: 0.1rem; color: #f57c00;"></i>
+              <span>Academic research prototype for educational & diagnostic support only. Not a medical or agricultural guarantee.</span>
+            </div>
+          </div>
+          {% else %}
+          <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+            <i class="fa-solid fa-leaf" style="font-size: 3rem; color: var(--border-strong); margin-bottom: 1rem;"></i>
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--forest-primary); margin-bottom: 0.4rem;">No Sample Analyzed Yet</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); max-width: 320px; margin: 0 auto;">
+              Upload a leaf image on the left panel and click "Run RBFNN Classification" to view diagnostic output.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Banana Leaf Disease Classification System — RBF Neural Network Thesis Project</p>
+    </div>
+  </footer>
+
+  <script>
+    function handleFileSelect(input) {
+      const previewWrap = document.getElementById('clientPreviewWrap');
+      const previewImg = document.getElementById('clientPreviewImg');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          previewWrap.style.display = 'flex';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+
+</body>
+</html>

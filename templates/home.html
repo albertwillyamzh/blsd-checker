@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Banana Leaf Disease Classification</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+  
+  <style>
+    .hero-section {
+      padding: 4rem 0 3rem;
+      background: linear-gradient(180deg, var(--bg-subtle) 0%, var(--bg-main) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(46, 125, 50, 0.1);
+      border: 1px solid rgba(46, 125, 50, 0.25);
+      color: var(--leaf-green);
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--forest-primary);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-description {
+      font-size: 1.08rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 2rem;
+      max-width: 620px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Hero Right Visual Card */
+    .hero-card-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .architecture-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--leaf-green);
+      margin-bottom: 1rem;
+    }
+
+    .pipeline-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .pipeline-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius-md);
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--forest-primary);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--forest-primary);
+    }
+
+    .step-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Supported Classes Section */
+    .classes-section {
+      padding: 4rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 3rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--forest-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-desc {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+    }
+
+    .classes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .class-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .class-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--leaf-green);
+    }
+
+    .class-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .class-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .icon-healthy { background: rgba(46, 125, 50, 0.12); color: #2e7d32; }
+    .icon-sigatoka { background: rgba(230, 81, 0, 0.12); color: #e65100; }
+    .icon-pestalotiopsis { background: rgba(198, 40, 40, 0.12); color: #c62828; }
+    .icon-cordana { background: rgba(106, 27, 154, 0.12); color: #6a1b9a; }
+
+    .class-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--forest-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .class-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 992px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .classes-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .classes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="{{ url_for('home') }}" class="nav-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div class="brand-titles">
+          <span class="brand-name">BLSDChecker</span>
+          <span class="brand-tag">Banana Leaf Disease Classification</span>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <a href="{{ url_for('home') }}" class="nav-item-link active">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="/classification" class="nav-item-link">
+          <i class="fa-solid fa-microscope"></i> Classifier
+        </a>
+
+        <!-- Profile Dropdown Wrapper -->
+        <div class="profile-wrapper">
+          <input type="checkbox" id="profileToggle" hidden>
+          <label for="profileToggle" class="profile-trigger">
+            <span class="profile-avatar">{{ session.username[0]|upper }}</span>
+            <span>{{ session.username }}</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+          </label>
+
+          <div class="profile-popup">
+            <div class="profile-popup-header">
+              <div class="profile-name-text">{{ session.username }}</div>
+              <div class="profile-role-badge">{{ session.role }}</div>
+            </div>
+
+            {% if session.role == 'admin' %}
+            <a href="/documentation" class="popup-item">
+              <i class="fa-solid fa-chart-pie"></i> Documentation
+            </a>
+            {% endif %}
+
+            <a href="/history" class="popup-item">
+              <i class="fa-solid fa-clock-rotate-left"></i> History
+            </a>
+
+            <a href="/logout" class="popup-item logout">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-eyebrow">
+          <i class="fa-solid fa-seedling"></i>
+          <span>AGRICULTURAL COMPUTER VISION THESIS</span>
+        </div>
+
+        <h1 class="hero-title">Banana Leaf Disease Classification</h1>
+
+        <p class="hero-description">
+          An automated agricultural diagnostic tool using Radial Basis Function Neural Network (RBFNN) for rapid identification of foliage pathology across banana plantations.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="/classification" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-microscope"></i>
+            <span>Start Classifier</span>
+          </a>
+          <a href="/history" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>View History</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Architecture Pipeline Card -->
+      <div class="hero-card-visual">
+        <div class="architecture-badge">
+          <i class="fa-solid fa-cpu"></i>
+          <span>RBFNN DIAGNOSTIC PIPELINE</span>
+        </div>
+
+        <div class="pipeline-steps">
+          <div class="pipeline-step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <span class="step-title">Image Normalization</span>
+              <span class="step-desc">Resized to 64×64 RGB & normalized pixel intensity</span>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <span class="step-title">PCA Feature Extraction</span>
+              <span class="step-desc">StandardScaler + PCA dimensionality reduction</span>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <span class="step-title">RBF Kernel Classification</span>
+              <span class="step-desc">Radial basis transfer function & probability mapping</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Classes Section -->
+  <section class="classes-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Supported Pathology Classes</h2>
+        <p class="section-desc">
+          The RBFNN model is trained to recognize four primary foliage categories from leaf imagery.
+        </p>
+      </div>
+
+      <div class="classes-grid">
+        <!-- Class 1: Healthy -->
+        <div class="class-card">
+          <div class="class-card-header">
+            <div class="class-icon-badge icon-healthy">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <span class="badge badge-forest">Healthy</span>
+          </div>
+          <div>
+            <h3 class="class-name">Healthy</h3>
+            <p class="class-desc">Normal banana leaf foliage without necrotic spots, streak lesions, or fungal discoloration.</p>
+          </div>
+        </div>
+
+        <!-- Class 2: Sigatoka -->
+        <div class="class-card">
+          <div class="class-card-header">
+            <div class="class-icon-badge icon-sigatoka">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <span class="badge badge-warning">Sigatoka</span>
+          </div>
+          <div>
+            <h3 class="class-name">Sigatoka</h3>
+            <p class="class-desc">Yellow and dark brown streak lesions advancing into leaf necrosis caused by fungal pathogens.</p>
+          </div>
+        </div>
+
+        <!-- Class 3: Pestalotiopsis -->
+        <div class="class-card">
+          <div class="class-card-header">
+            <div class="class-icon-badge icon-pestalotiopsis">
+              <i class="fa-solid fa-bug"></i>
+            </div>
+            <span class="badge badge-warning">Pestalotiopsis</span>
+          </div>
+          <div>
+            <h3 class="class-name">Pestalotiopsis</h3>
+            <p class="class-desc">Greyish-brown leaf spot lesions with dark brown margins impairing photosynthetic capacity.</p>
+          </div>
+        </div>
+
+        <!-- Class 4: Cordana -->
+        <div class="class-card">
+          <div class="class-card-header">
+            <div class="class-icon-badge icon-cordana">
+              <i class="fa-solid fa-disease"></i>
+            </div>
+            <span class="badge badge-warning">Cordana</span>
+          </div>
+          <div>
+            <h3 class="class-name">Cordana</h3>
+            <p class="class-desc">Large oval or diamond-shaped brown leaf spots surrounded by distinct bright yellow halos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Banana Leaf Disease Classification System — RBF Neural Network Thesis Project</p>
+    </div>
+  </footer>
+
+</body>
+</html>

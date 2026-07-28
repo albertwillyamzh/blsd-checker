@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History - Banana Leaf Disease Classification</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+  
+  <style>
+    .history-section {
+      padding: 3.5rem 0 5rem;
+    }
+
+    .history-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .history-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .history-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-strong);
+    }
+
+    .history-checkbox-wrap {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: var(--shadow-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--forest-primary);
+    }
+
+    .history-checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--leaf-green);
+      cursor: pointer;
+    }
+
+    .history-img-wrap {
+      height: 180px;
+      background: #112419;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .history-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .history-body {
+      padding: 1.25rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .history-timestamp {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+      font-family: var(--font-mono);
+    }
+
+    .history-result-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      font-size: 0.88rem;
+      color: var(--forest-primary);
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .delete-action-bar {
+      position: sticky;
+      bottom: 2rem;
+      z-index: 100;
+      background: rgba(27, 59, 43, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-lg);
+      margin-top: 2rem;
+    }
+
+    .empty-history-state {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="{{ url_for('home') }}" class="nav-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div class="brand-titles">
+          <span class="brand-name">BLSDChecker</span>
+          <span class="brand-tag">Banana Leaf Disease Classification</span>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <a href="{{ url_for('home') }}" class="nav-item-link">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="/classification" class="nav-item-link">
+          <i class="fa-solid fa-microscope"></i> Classifier
+        </a>
+
+        <!-- Profile Dropdown Wrapper -->
+        <div class="profile-wrapper">
+          <input type="checkbox" id="profileToggle" hidden>
+          <label for="profileToggle" class="profile-trigger">
+            <span class="profile-avatar">{{ session.username[0]|upper }}</span>
+            <span>{{ session.username }}</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+          </label>
+
+          <div class="profile-popup">
+            <div class="profile-popup-header">
+              <div class="profile-name-text">{{ session.username }}</div>
+              <div class="profile-role-badge">{{ session.role }}</div>
+            </div>
+
+            {% if session.role == 'admin' %}
+            <a href="/documentation" class="popup-item">
+              <i class="fa-solid fa-chart-pie"></i> Documentation
+            </a>
+            {% endif %}
+
+            <a href="/history" class="popup-item">
+              <i class="fa-solid fa-clock-rotate-left"></i> History
+            </a>
+
+            <a href="/logout" class="popup-item logout">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- History Container -->
+  <section class="history-section">
+    <div class="container">
+      
+      <div class="history-toolbar">
+        <div>
+          <span class="badge badge-forest" style="margin-bottom: 0.4rem;">CLASSIFICATION ARCHIVE</span>
+          <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--forest-primary);">Diagnostic History</h1>
+          <p style="color: var(--text-muted);">View past banana leaf disease classification records and evaluation results.</p>
+        </div>
+
+        {% if history|length > 0 %}
+        <div style="display: flex; gap: 0.8rem; align-items: center;">
+          <button type="button" class="btn btn-secondary" onclick="toggleSelectAll()">
+            <i class="fa-solid fa-square-check"></i> Select / Deselect All
+          </button>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if history|length > 0 %}
+      <form action="{{ url_for('delete_history') }}" method="POST" id="historyForm">
+        
+        <div class="history-grid">
+          {% for row in history %}
+          <div class="history-card">
+            
+            <label class="history-checkbox-wrap">
+              <input type="checkbox" name="selected" value="{{ row.id }}" class="history-checkbox select-item">
+              <span>Select</span>
+            </label>
+
+            <div class="history-img-wrap">
+              <img src="{{ url_for('static', filename='uploads/' + row.filename) }}" alt="Classification Sample">
+            </div>
+
+            <div class="history-body">
+              <div class="history-timestamp">
+                <i class="fa-solid fa-calendar-day"></i>
+                <span>{{ row.created_at }}</span>
+              </div>
+
+              <div class="history-result-box">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.2rem;">Diagnosis Output</div>
+                <div>{{ row.result }}</div>
+              </div>
+            </div>
+
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="delete-action-bar">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <i class="fa-solid fa-trash-can" style="color: var(--lime-light); font-size: 1.2rem;"></i>
+            <span style="font-weight: 600; font-size: 0.95rem;">Manage Selected Records</span>
+          </div>
+
+          <button type="submit" class="btn btn-danger">
+            <i class="fa-solid fa-trash"></i> Delete Selected Records
+          </button>
+        </div>
+
+      </form>
+      {% else %}
+      <div class="empty-history-state">
+        <i class="fa-solid fa-clock-rotate-left" style="font-size: 3.5rem; color: var(--border-strong); margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--forest-primary); margin-bottom: 0.5rem;">No History Records Found</h3>
+        <p style="color: var(--text-muted); max-width: 420px; margin: 0 auto 1.5rem;">
+          You haven't run any classifications yet. Upload a leaf image in the Classifier page to begin logging diagnostic results.
+        </p>
+        <a href="/classification" class="btn btn-primary">
+          <i class="fa-solid fa-microscope"></i> Go to Classifier
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Banana Leaf Disease Classification System — RBF Neural Network Thesis Project</p>
+    </div>
+  </footer>
+
+  <script>
+    let allSelected = false;
+    function toggleSelectAll() {
+      const checkboxes = document.querySelectorAll('.select-item');
+      allSelected = !allSelected;
+      checkboxes.forEach(cb => cb.checked = allSelected);
+    }
+  </script>
+
+</body>
+</html>
