@@ -84,7 +84,7 @@ To maintain clean repository hygiene, large dataset archives, trained model chec
 
 ### 2. Clone Repository & Setup Virtual Environment
 ```bash
-git clone https://github.com/your-username/blsd-checker.git
+git clone https://github.com/albertwillyamzh/blsd-checker.git
 cd blsd-checker
 
 # Create virtual environment
@@ -118,11 +118,17 @@ Open your browser and navigate to `http://127.0.0.1:5000` to access the applicat
 
 ## 📸 Screenshots
 
-*(Screenshot placeholders to be added upon deployment)*
-- **Landing & Authentication Portal**: `[Insert Screenshot]`
-- **Classification Workspace**: `[Insert Screenshot]`
-- **Prediction Results & Score Overview**: `[Insert Screenshot]`
-- **Diagnostic History & Administrator Documentation**: `[Insert Screenshot]`
+### Home Page
+![BLSDChecker Home](docs/images/home.png)
+
+### Classification Workspace
+![BLSDChecker Classifier](docs/images/classifier.png)
+
+### Prediction Results & Relative Score Analysis
+![BLSDChecker Prediction Result](docs/images/result.png)
+
+### Administrator Evaluation Documentation
+![BLSDChecker Evaluation Documentation](docs/images/documentation.png)
 
 ---
 
